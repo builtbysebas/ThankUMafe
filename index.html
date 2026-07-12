@@ -37,9 +37,35 @@
   }
 
   .wrap {
-    max-width: 980px;
+    max-width: 1035px;
     margin: 0 auto;
     padding: 64px 24px;
+  }
+
+  .progress-bar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 0 0 40px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 26px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--heading-grad);
+  }
+  .progress-label {
+    font-family: 'Sora', sans-serif;
+    font-weight: 500;
+    font-size: 1.4rem;
+    color: var(--text);
+    white-space: nowrap;
   }
 
   section {
@@ -49,13 +75,13 @@
 
   h1, h2, h3, h4 {
     font-family: 'Sora', sans-serif;
-    font-weight: 600;
+    font-weight: 500;
     text-align: center;
     line-height: 1.25;
   }
 
   .h2 {
-    font-size: clamp(1.6rem, 4vw, 2.5rem);
+    font-size: clamp(1.5rem, 3.6vw, 2.25rem);
     background: var(--heading-grad);
     -webkit-background-clip: text;
     background-clip: text;
@@ -63,7 +89,7 @@
     margin: 0.4em 0;
   }
   .h3 {
-    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    font-size: clamp(1.3rem, 3.2vw, 1.6875rem);
     background: var(--heading-grad);
     -webkit-background-clip: text;
     background-clip: text;
@@ -80,16 +106,15 @@
 
   .h2 span, .h3 span { -webkit-text-fill-color: unset; background-clip: unset; }
 
-  .warning { font-size: clamp(1.1rem, 3vw, 1.5rem); }
-  .step-label { opacity: 0.85; font-size: clamp(1.1rem, 3vw, 1.5rem); }
+  .warning { }
+  .step-label { opacity: 0.85; }
 
   p.p {
     text-align: center;
-    max-width: 700px;
     margin: 0.8em auto;
     color: var(--text);
     opacity: 0.92;
-    font-size: 1.02rem;
+    font-size: 1.125rem;
   }
 
   .divider {
@@ -117,7 +142,6 @@
     border: 0;
   }
   .main-video {
-    max-width: 720px;
     margin: 28px auto;
   }
 
@@ -156,9 +180,6 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     margin-top: 24px;
-  }
-  .video-grid.accent-top {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
   .video-grid .video-wrap.card-video {
     border-top: 3px solid;
@@ -213,8 +234,8 @@
   .testimonial-card figcaption {
     padding: 10px 8px;
     font-family: 'Sora', sans-serif;
-    font-weight: 600;
-    font-size: 0.95rem;
+    font-weight: 400;
+    font-size: 1.125rem;
   }
   @media (max-width: 700px) {
     .testimonial-grid { grid-template-columns: repeat(2, 1fr); }
@@ -231,19 +252,21 @@
     text-align: center;
     padding: 20px 12px;
   }
-  .stat-number {
+  .stat-ring {
+    display: block;
+    margin: 0 auto;
+  }
+  .stat-ring-text {
     font-family: 'Sora', sans-serif;
-    font-weight: 700;
-    font-size: clamp(2rem, 6vw, 2.8rem);
-    background: var(--heading-grad);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-weight: 600;
+    font-size: 22px;
+    fill: var(--text);
   }
   .stat-title {
     font-family: 'Sora', sans-serif;
-    font-weight: 600;
-    margin-top: 4px;
+    font-weight: 500;
+    font-size: 1.4rem;
+    margin-top: 12px;
   }
   .stat-desc {
     font-size: 0.9rem;
@@ -258,17 +281,24 @@
   .callout-box {
     max-width: 640px;
     margin: 28px auto 0;
-    padding: 24px 28px;
-    text-align: center;
-    background: rgba(88, 214, 141, 0.08);
-    border: 1px solid rgba(88, 214, 141, 0.35);
+    padding: 20px 26px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-align: left;
+    background: rgba(45, 110, 70, 0.35);
+    border: 1px solid rgba(124, 217, 146, 0.4);
     border-radius: 14px;
   }
+  .callout-icon {
+    flex-shrink: 0;
+  }
   .callout-box .p {
-    color: #d8ffe9;
+    color: #e3fff0;
     opacity: 1;
     font-size: 1.1rem;
     margin: 0;
+    text-align: left;
   }
 
   .closing { padding-bottom: 60px; }
@@ -278,6 +308,12 @@
 
 <section class="hero">
   <div class="wrap">
+    <div class="progress-bar" role="img" aria-label="Progreso 93%">
+      <div class="progress-track">
+        <div class="progress-fill" style="width:93%"></div>
+      </div>
+      <span class="progress-label">93%</span>
+    </div>
     <h2 class="h2"><strong>¡Tu Transformación </strong><span style="background:none;-webkit-text-fill-color:#97b8ffff;color:#97b8ffff;"><strong>Comienza Ahora!</strong></span></h2>
     <h2 class="h2 warning"><span style="background:none;-webkit-text-fill-color:#ff0000;color:#ff0000;"><strong>LA SESIÓN NO ESTÁ</strong></span><span style="background:none;-webkit-text-fill-color:#F44444;color:#F44444;"><strong> </strong></span><span style="background:none;-webkit-text-fill-color:#ff0000;color:#ff0000;"><strong>CONFIRMADA AÚN</strong></span><br><span style="background:none;-webkit-text-fill-color:#ff0000;color:#ff0000;"><strong>↓ SIGUE ESTOS PASOS PARA CONFIRMAR ↓</strong></span></h2>
     <h2 class="h2 step-label"><strong>PASO 1: </strong></h2>
@@ -459,15 +495,51 @@
     </div>
     <div class="stats-row">
       <div class="stat-card">
-      <div class="stat-number">98%</div>
+      <svg class="stat-ring" viewBox="0 0 120 120" width="120" height="120">
+      <defs>
+        <linearGradient id="ring980" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#7AF0FF"/>
+          <stop offset="100%" stop-color="#B380FF"/>
+        </linearGradient>
+      </defs>
+      <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="10"/>
+      <circle cx="60" cy="60" r="52" fill="none" stroke="url(#ring980)" stroke-width="10"
+        stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="6.53"
+        transform="rotate(-90 60 60)"/>
+      <text x="60" y="68" text-anchor="middle" class="stat-ring-text">98%</text>
+    </svg>
       <div class="stat-title">Satisfacción</div>
       <div class="stat-desc">De nuestras alumnas recomiendan el programa.</div>
     </div><div class="stat-card">
-      <div class="stat-number">88%</div>
+      <svg class="stat-ring" viewBox="0 0 120 120" width="120" height="120">
+      <defs>
+        <linearGradient id="ring881" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#7AF0FF"/>
+          <stop offset="100%" stop-color="#B380FF"/>
+        </linearGradient>
+      </defs>
+      <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="10"/>
+      <circle cx="60" cy="60" r="52" fill="none" stroke="url(#ring881)" stroke-width="10"
+        stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="39.21"
+        transform="rotate(-90 60 60)"/>
+      <text x="60" y="68" text-anchor="middle" class="stat-ring-text">88%</text>
+    </svg>
       <div class="stat-title">Resultados</div>
       <div class="stat-desc">Alcanza sus metas en los primeros 15 días</div>
     </div><div class="stat-card">
-      <div class="stat-number">95%</div>
+      <svg class="stat-ring" viewBox="0 0 120 120" width="120" height="120">
+      <defs>
+        <linearGradient id="ring952" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#7AF0FF"/>
+          <stop offset="100%" stop-color="#B380FF"/>
+        </linearGradient>
+      </defs>
+      <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="10"/>
+      <circle cx="60" cy="60" r="52" fill="none" stroke="url(#ring952)" stroke-width="10"
+        stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="16.34"
+        transform="rotate(-90 60 60)"/>
+      <text x="60" y="68" text-anchor="middle" class="stat-ring-text">95%</text>
+    </svg>
       <div class="stat-title">Cambio Mental</div>
       <div class="stat-desc">Reporta mejora significativa en autoestima.</div>
     </div>
@@ -479,6 +551,10 @@
   <div class="wrap">
     <h2 class="h2 step-heading"><strong>PASO 4: </strong></h2><h2 class="h2 step-heading"><strong>TU LLAMADA ESTÁ CONFIRMADA </strong></h2><h2 class="h2 step-heading"><strong>¡Prepárate para el cambio!</strong></h2>
     <div class="callout-box">
+      <svg class="callout-icon" viewBox="0 0 24 24" width="22" height="22" fill="none">
+        <circle cx="12" cy="12" r="10" stroke="#7CD992" stroke-width="1.6"/>
+        <path d="M7.5 12.5l3 3 6-6.5" stroke="#7CD992" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
       <p class="p">¡Estamos emocionadas de acompañarte en este viaje! Tu transformación ya comenzó. 💪</p>
     </div>
   </div>
