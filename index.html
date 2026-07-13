@@ -23,6 +23,13 @@
 
   html { scroll-behavior: smooth; }
 
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
   body {
     background-color: var(--bg);
     background-image:
@@ -30,10 +37,57 @@
       radial-gradient(circle at 20% 45%, rgba(113,130,255,0.28) 0, rgba(113,130,255,0) 60%),
       radial-gradient(circle at 80% 80%, rgba(179,128,255,0.22) 0, rgba(179,128,255,0) 55%);
     background-attachment: fixed;
+    background-size: 140% 140%;
+    animation: bgDrift 22s ease-in-out infinite alternate;
     color: var(--text);
     font-family: 'Noto Sans', sans-serif;
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
+  }
+
+  @keyframes bgDrift {
+    0%   { background-position: 0% 0%, 10% 20%, 90% 90%; }
+    100% { background-position: 10% 10%, 25% 35%, 75% 80%; }
+  }
+
+  /* Scroll-reveal: fade + rise + unblur, like motion resolving into focus */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    filter: blur(10px);
+    transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1),
+                transform 0.9s cubic-bezier(0.22,1,0.36,1),
+                filter 0.9s cubic-bezier(0.22,1,0.36,1);
+    will-change: opacity, transform, filter;
+  }
+  .reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+  /* Stagger children of a revealed group */
+  .reveal-group.in-view > * {
+    animation: revealChild 0.8s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  .reveal-group.in-view > *:nth-child(1) { animation-delay: 0.02s; }
+  .reveal-group.in-view > *:nth-child(2) { animation-delay: 0.06s; }
+  .reveal-group.in-view > *:nth-child(3) { animation-delay: 0.10s; }
+  .reveal-group.in-view > *:nth-child(4) { animation-delay: 0.14s; }
+  .reveal-group.in-view > *:nth-child(5) { animation-delay: 0.18s; }
+  .reveal-group.in-view > *:nth-child(6) { animation-delay: 0.22s; }
+  .reveal-group.in-view > *:nth-child(7) { animation-delay: 0.26s; }
+  .reveal-group.in-view > *:nth-child(8) { animation-delay: 0.30s; }
+  .reveal-group.in-view > *:nth-child(9) { animation-delay: 0.34s; }
+  .reveal-group.in-view > *:nth-child(10) { animation-delay: 0.38s; }
+  .reveal-group.in-view > *:nth-child(11) { animation-delay: 0.42s; }
+  .reveal-group.in-view > *:nth-child(12) { animation-delay: 0.46s; }
+  .reveal-group.in-view > *:nth-child(13) { animation-delay: 0.50s; }
+  .reveal-group.in-view > *:nth-child(14) { animation-delay: 0.54s; }
+  .reveal-group.in-view > *:nth-child(15) { animation-delay: 0.58s; }
+  .reveal-group > * { opacity: 0; }
+  @keyframes revealChild {
+    from { opacity: 0; transform: translateY(22px) scale(0.97); filter: blur(8px); }
+    to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
   }
 
   .wrap {
@@ -52,13 +106,22 @@
     flex: 1;
     height: 26px;
     border-radius: 999px;
-    background: rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.10);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.14);
     overflow: hidden;
   }
   .progress-fill {
     height: 100%;
+    width: 0%;
     border-radius: 999px;
     background: var(--heading-grad);
+    box-shadow: 0 0 18px rgba(179,128,255,0.55);
+    transition: width 1.8s cubic-bezier(0.16,1,0.3,1);
+  }
+  .progress-fill.filled {
+    width: var(--target-width, 93%);
   }
   .progress-label {
     font-family: 'Sora', sans-serif;
@@ -134,6 +197,7 @@
     border-radius: 14px;
     background: #000;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    transition: box-shadow 0.4s ease;
   }
   .video-wrap iframe {
     position: absolute;
@@ -150,26 +214,34 @@
     cursor: pointer;
     background: #000;
   }
+  .video-facade:hover {
+    box-shadow: 0 14px 44px rgba(179,128,255,0.35);
+  }
   .facade-thumb {
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.6s cubic-bezier(0.22,1,0.36,1), filter 0.6s ease;
+  }
+  .video-facade:hover .facade-thumb {
+    transform: scale(1.05);
+    filter: brightness(0.75);
   }
   .play-btn {
     position: absolute;
     top: 50%; left: 50%;
-    transform: translate(-50%, -50%) scale(0.85);
+    transform: translate(-50%, -50%) scale(0.8);
     opacity: 0;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.3s cubic-bezier(0.22,1,0.36,1), transform 0.3s cubic-bezier(0.22,1,0.36,1);
     filter: drop-shadow(0 6px 24px rgba(0,0,0,0.6));
     pointer-events: none;
   }
   .video-facade:hover .play-btn,
   .video-facade:focus-visible .play-btn {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scale(1.08);
   }
   @media (hover: none) {
     .play-btn { opacity: 0.85; }
@@ -203,6 +275,13 @@
     object-fit: cover;
     border-radius: 6px;
     display: block;
+    transition: transform 0.5s cubic-bezier(0.22,1,0.36,1), box-shadow 0.5s ease;
+  }
+  .gallery-img:hover {
+    transform: scale(1.06);
+    box-shadow: 0 8px 22px rgba(122,240,255,0.25);
+    position: relative;
+    z-index: 2;
   }
   @media (max-width: 700px) {
     .gallery-grid { grid-template-columns: repeat(3, 1fr); }
@@ -212,33 +291,45 @@
   }
 
   /* Testimonials */
+  /* MARCA-VERIFICACION-9f3k2 */
   .testimonial-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
+    columns: 3;
+    column-gap: 18px;
     margin: 28px 0;
   }
   .testimonial-card {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
+    display: inline-block;
+    width: 100%;
+    break-inside: avoid;
+    margin-bottom: 18px;
+    background: linear-gradient(180deg, rgba(179,128,255,0.10), rgba(255,255,255,0.03));
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid rgba(179,128,255,0.20);
+    border-radius: 14px;
     overflow: hidden;
-    text-align: center;
+    text-align: left;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), border-color 0.35s ease, box-shadow 0.35s ease;
+  }
+  .testimonial-card:hover {
+    transform: translateY(-5px) scale(1.015);
+    border-color: rgba(179,128,255,0.5);
+    box-shadow: 0 16px 36px rgba(120,80,220,0.28);
   }
   .testimonial-card img {
     width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
+    height: auto;
     display: block;
   }
   .testimonial-card figcaption {
-    padding: 10px 8px;
+    padding: 14px 16px 10px;
     font-family: 'Sora', sans-serif;
     font-weight: 400;
     font-size: 1.125rem;
   }
   @media (max-width: 700px) {
-    .testimonial-grid { grid-template-columns: repeat(2, 1fr); }
+    .testimonial-grid { columns: 2; }
   }
 
   /* Stats */
@@ -255,6 +346,10 @@
   .stat-ring {
     display: block;
     margin: 0 auto;
+    filter: drop-shadow(0 0 14px rgba(179,128,255,0.35));
+  }
+  .stat-ring-fill {
+    transition: stroke-dashoffset 1.4s cubic-bezier(0.16,1,0.3,1);
   }
   .stat-ring-text {
     font-family: 'Sora', sans-serif;
@@ -286,9 +381,12 @@
     align-items: center;
     gap: 14px;
     text-align: left;
-    background: rgba(45, 110, 70, 0.35);
+    background: rgba(45, 110, 70, 0.28);
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
     border: 1px solid rgba(124, 217, 146, 0.4);
     border-radius: 14px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.25);
   }
   .callout-icon {
     flex-shrink: 0;
@@ -310,7 +408,7 @@
   <div class="wrap">
     <div class="progress-bar" role="img" aria-label="Progreso 93%">
       <div class="progress-track">
-        <div class="progress-fill" style="width:93%"></div>
+        <div class="progress-fill" id="heroProgressFill" style="--target-width:93%"></div>
       </div>
       <span class="progress-label">93%</span>
     </div>
@@ -333,7 +431,7 @@
     </div>
     <div class="divider"></div>
     <h3 class="h3"><strong>PREGUNTAS COMUNES</strong></h3>
-    <div class="video-grid">
+    <div class="video-grid reveal-group">
       <div class="video-wrap  video-facade" data-embed="https://www.youtube.com/embed/Ux5HcbmzlhY?rel=0"
         role="button" tabindex="0" aria-label="Reproducir video"
         onclick="playGammaVideo(this)"
@@ -385,9 +483,11 @@
 
 <section class="step">
   <div class="wrap">
+    <div class="reveal">
     <h2 class="h2 step-heading"><strong>PASO 2: </strong></h2><h2 class="h2 step-heading"><strong>HISTORIAS QUE INSPIRAN</strong></h2><h2 class="h2 step-heading"><strong>¡Ellas lo lograron!</strong></h2>
     <p class="p">Estas son alumnas reales con vidas reales. Sus historias son la prueba de que el cambio es posible para ti también.</p>
-    <div class="video-grid accent-top">
+    </div>
+    <div class="video-grid accent-top reveal-group">
       <div class="video-wrap card-video video-facade" data-embed="https://www.youtube.com/embed/BCVGAPWDbAs?rel=0"
         role="button" tabindex="0" aria-label="Reproducir video"
         onclick="playGammaVideo(this)"
@@ -450,9 +550,11 @@
 
 <section class="step">
   <div class="wrap">
+    <div class="reveal">
     <h2 class="h2 step-heading"><strong>PASO 3: </strong></h2><h2 class="h2 step-heading"><strong>LA EVIDENCIA HABLA: </strong></h2>
     <p class="p">Cada foto representa semanas de esfuerzo, constancia y apoyo. Estos resultados son reales por alumnas como tú.</p>
-    <div class="gallery-grid">
+    </div>
+    <div class="gallery-grid reveal-group">
       <img class="gallery-img" src="images/gallery_8519d12ea0.jpg" loading="lazy" alt=""><img class="gallery-img" src="images/gallery_b4cb632086.jpeg" loading="lazy" alt=""><img class="gallery-img" src="images/gallery_8bef271f0f.jpg" loading="lazy" alt=""><img class="gallery-img" src="images/gallery_3d0f23ac4c.jpg" loading="lazy" alt=""><img class="gallery-img" src="images/gallery_d5e810c067.jpg" loading="lazy" alt=""><img class="gallery-img" src="images/gallery_e0e79ab324.jpg" loading="lazy" alt=""><img class="gallery-img" src="images/gallery_1b5fb1b0a1.jpg" loading="lazy" alt=""><img class="gallery-img" src="images/gallery_b8cc5755b7.jpg" loading="lazy" alt=""><img class="gallery-img" src="images/gallery_291e08251e.jpg" loading="lazy" alt=""><img class="gallery-img" src="images/gallery_94a0892648.jpg" loading="lazy" alt=""><img class="gallery-img" src="images/gallery_2b22d890cb.jpg" loading="lazy" alt=""><img class="gallery-img" src="images/gallery_1775fa729f.jpg" loading="lazy" alt=""><img class="gallery-img" src="images/gallery_4837f509e9.png" loading="lazy" alt=""><img class="gallery-img" src="images/gallery_a9c6b92726.png" loading="lazy" alt=""><img class="gallery-img" src="images/gallery_38903ee557.png" loading="lazy" alt="">
     </div>
     <p class="p">Cada imagen es una historia de dedicación, constancia y éxito real.</p>
@@ -461,39 +563,41 @@
 
 <section class="step">
   <div class="wrap">
+    <div class="reveal">
     <h2 class="h2 step-heading"><strong>VOCES DE ÉXITO:</strong></h2><h2 class="h2 step-heading"><strong> Ellas hablan por ti </strong></h2>
     <p class="p">Lee lo que nuestras alumnas dicen después de vivir el proceso. Sus palabras son el mejor reflejo de lo que te espera.</p>
-    <div class="testimonial-grid">
+    </div>
+    <div class="testimonial-grid reveal-group">
       <figure class="testimonial-card">
-          <img src="images/testi_b6ff04545e.png" loading="lazy" alt="Dani F.">
           <figcaption>Dani F.</figcaption>
+          <img src="images/testi_b6ff04545e.jpg" loading="lazy" alt="Dani F.">
         </figure><figure class="testimonial-card">
-          <img src="images/testi_9fa841b10e.png" loading="lazy" alt="Jimena M.">
           <figcaption>Jimena M.</figcaption>
+          <img src="images/testi_9fa841b10e.jpg" loading="lazy" alt="Jimena M.">
         </figure><figure class="testimonial-card">
-          <img src="images/testi_4c7cec6a65.png" loading="lazy" alt="Elena V.">
           <figcaption>Elena V.</figcaption>
+          <img src="images/testi_4c7cec6a65.jpg" loading="lazy" alt="Elena V.">
         </figure><figure class="testimonial-card">
-          <img src="images/testi_53d96a84ff.png" loading="lazy" alt="Fátima C.">
           <figcaption>Fátima C.</figcaption>
+          <img src="images/testi_53d96a84ff.jpg" loading="lazy" alt="Fátima C.">
         </figure><figure class="testimonial-card">
-          <img src="images/testi_621deada87.png" loading="lazy" alt="Vanessa H.">
           <figcaption>Vanessa H.</figcaption>
+          <img src="images/testi_621deada87.jpg" loading="lazy" alt="Vanessa H.">
         </figure><figure class="testimonial-card">
-          <img src="images/testi_7beb7fd197.png" loading="lazy" alt="Fabiola F. ">
           <figcaption>Fabiola F. </figcaption>
+          <img src="images/testi_7beb7fd197.jpg" loading="lazy" alt="Fabiola F. ">
         </figure><figure class="testimonial-card">
-          <img src="images/testi_ba6cace4ac.png" loading="lazy" alt="Alexandra R. ">
           <figcaption>Alexandra R. </figcaption>
+          <img src="images/testi_ba6cace4ac.jpg" loading="lazy" alt="Alexandra R. ">
         </figure><figure class="testimonial-card">
-          <img src="images/testi_e2045b77d5.png" loading="lazy" alt="Maricarmen V. ">
           <figcaption>Maricarmen V. </figcaption>
+          <img src="images/testi_e2045b77d5.jpg" loading="lazy" alt="Maricarmen V. ">
         </figure><figure class="testimonial-card">
-          <img src="images/testi_17d876a0d3.png" loading="lazy" alt="Miranda P. ">
           <figcaption>Miranda P. </figcaption>
+          <img src="images/testi_17d876a0d3.jpg" loading="lazy" alt="Miranda P. ">
         </figure>
     </div>
-    <div class="stats-row">
+    <div class="stats-row reveal-group">
       <div class="stat-card">
       <svg class="stat-ring" viewBox="0 0 120 120" width="120" height="120">
       <defs>
@@ -504,7 +608,8 @@
       </defs>
       <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="10"/>
       <circle cx="60" cy="60" r="52" fill="none" stroke="url(#ring980)" stroke-width="10"
-        stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="6.53"
+        class="stat-ring-fill" stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="326.73"
+        data-target-offset="6.53"
         transform="rotate(-90 60 60)"/>
       <text x="60" y="68" text-anchor="middle" class="stat-ring-text">98%</text>
     </svg>
@@ -520,7 +625,8 @@
       </defs>
       <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="10"/>
       <circle cx="60" cy="60" r="52" fill="none" stroke="url(#ring881)" stroke-width="10"
-        stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="39.21"
+        class="stat-ring-fill" stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="326.73"
+        data-target-offset="39.21"
         transform="rotate(-90 60 60)"/>
       <text x="60" y="68" text-anchor="middle" class="stat-ring-text">88%</text>
     </svg>
@@ -536,7 +642,8 @@
       </defs>
       <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="10"/>
       <circle cx="60" cy="60" r="52" fill="none" stroke="url(#ring952)" stroke-width="10"
-        stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="16.34"
+        class="stat-ring-fill" stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="326.73"
+        data-target-offset="16.34"
         transform="rotate(-90 60 60)"/>
       <text x="60" y="68" text-anchor="middle" class="stat-ring-text">95%</text>
     </svg>
@@ -549,8 +656,10 @@
 
 <section class="step closing">
   <div class="wrap">
+    <div class="reveal">
     <h2 class="h2 step-heading"><strong>PASO 4: </strong></h2><h2 class="h2 step-heading"><strong>TU LLAMADA ESTÁ CONFIRMADA </strong></h2><h2 class="h2 step-heading"><strong>¡Prepárate para el cambio!</strong></h2>
-    <div class="callout-box">
+    </div>
+    <div class="callout-box reveal">
       <svg class="callout-icon" viewBox="0 0 24 24" width="22" height="22" fill="none">
         <circle cx="12" cy="12" r="10" stroke="#7CD992" stroke-width="1.6"/>
         <path d="M7.5 12.5l3 3 6-6.5" stroke="#7CD992" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -585,6 +694,55 @@ function playGammaVideo(el) {
   el.onclick = null;
   el.onkeydown = null;
 }
+
+// Scroll-reveal (fade + rise + unblur) for sections and grouped children
+(function() {
+  var targets = document.querySelectorAll('.reveal, .reveal-group');
+  if (!('IntersectionObserver' in window) || targets.length === 0) {
+    targets.forEach(function(t) { t.classList.add('in-view'); });
+  } else {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+    targets.forEach(function(t) { io.observe(t); });
+  }
+})();
+
+// Animate the top progress bar from 0 to its target width, shortly after load
+(function() {
+  var fill = document.getElementById('heroProgressFill');
+  if (!fill) return;
+  requestAnimationFrame(function() {
+    setTimeout(function() { fill.classList.add('filled'); }, 250);
+  });
+})();
+
+// Animate stat rings from 0 to their real percentage when scrolled into view
+(function() {
+  var rings = document.querySelectorAll('.stat-ring-fill');
+  if (rings.length === 0) return;
+  if (!('IntersectionObserver' in window)) {
+    rings.forEach(function(r) { r.style.strokeDashoffset = r.getAttribute('data-target-offset'); });
+    return;
+  }
+  var io2 = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        var el = entry.target;
+        setTimeout(function() {
+          el.style.strokeDashoffset = el.getAttribute('data-target-offset');
+        }, 150);
+        io2.unobserve(el);
+      }
+    });
+  }, { threshold: 0.4 });
+  rings.forEach(function(r) { io2.observe(r); });
+})();
 </script>
 </body>
 </html>
